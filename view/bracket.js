@@ -11,6 +11,14 @@ const translateCoordinates = {
   7: 'translate(00px, 600px)',
 };
 const containerNode = document.getElementById('container');
+// const buttonL = document.createElement('button');
+// buttonL.innerHTML = '+';
+// buttonL.onclick = () => {
+//   alert('node.childInfo()');
+//   console.log('bottonL');
+//   return false;
+// };
+// containerNode.appendChild(buttonL);
 function createDiv(index, node) {
   const newDiv = document.createElement('div');
   newDiv.classList.add('nodeDiv');
@@ -18,12 +26,34 @@ function createDiv(index, node) {
   newDiv.style.webkitTransform = translateCoordinates[index];
   newDiv.style.transform = newDiv.style.webkitTransform;
 
+  // const buttonL = document.createElement('button');
+  // buttonL.innerHTML = '+';
+  // buttonL.onclick = () => {
+  //   alert('node.childInfo()');
+  //   console.log('bottonL');
+  //   return false;
+  // };
+  // newDiv.appendChild(buttonL);
+
+
   const leftChild = document.createElement('div');
   const rightChild = document.createElement('div');
   leftChild.classList.add('childDiv');
   leftChild.innerHTML = `Slot ${index * 2 - 1}:` + node.childInfo();
   rightChild.classList.add('childDiv');
   rightChild.innerHTML = `Slot ${index * 2}:` + node.childInfo(false);
+  // const buttonL = document.createElement('button');
+  // buttonL.innerHTML = '+';
+  // buttonL.onclick = () => {
+  //   alert(node.leftChild.toString());
+  // };
+  // leftChild.insertBefore(buttonL, leftChild.firstChild);
+
+  // const buttonR = document.createElement('button');
+  // buttonR.innerHTML = '+';
+  // rightChild.appendChild(buttonR);
+
+
   newDiv.appendChild(leftChild);
   newDiv.appendChild(rightChild);
 }
@@ -37,7 +67,14 @@ function createEmptyDiv(index) {
 }
 
 const rootNode = new tree.BinaryNode('Grand Final');
-console.log(rootNode.toString());
+// if (rootNode) {
+//   if (rootNode === true) {
+//     console.log(true);
+//   } else {
+//     console.log(rootNode.toString());
+//   }
+// }
+
 const semiA = rootNode.insertNode('semi A');
 const semiB = rootNode.insertNode('semi B', false);
 
@@ -71,91 +108,116 @@ semiB.replaceSpecialChild(match1);
 // semiB.nodeSwitch = 1;
 // rootNode.nodeSwitch = 1;
 
+// rootNode.refineSubtree();
+function drawBracket() {
+  const treeArr = rootNode.binaryTreeToArray();
+  console.log(treeArr);
+  for (let i = 0; i < 8; i++) {
+    if (treeArr[i] != null) {
+      createDiv(i, treeArr[i]);
+    } else {
+      // createEmptyDiv(i);
+    }
+  }
+  const winner = document.createElement('div');
+  winner.classList.add('winner');
+  winner.style.webkitTransform = 'translate(1100px, 325px)';
+  winner.style.transform = winner.style.webkitTransform;
+  winner.innerHTML = 'winner: ' + rootNode.controlSwitch();
+  containerNode.appendChild(winner);
 
-const treeArr = rootNode.binaryTreeToArray();
-console.log(treeArr);
-for (let i = 0; i < 8; i++) {
-  if (treeArr[i] != null) {
-    createDiv(i, treeArr[i]);
-  } else {
-    // createEmptyDiv(i);
+  const root2 = new tree.BinaryNode('consolation');
+  root2.replaceSpecialChild(rootNode.leftChild);
+  root2.replaceSpecialChild(rootNode.rightChild, false);
+  const consolation = document.createElement('div');
+  consolation.classList.add('nodeDiv');
+  consolation.style.webkitTransform = 'translate(1100px, 125px)';
+  consolation.style.transform = consolation.style.webkitTransform;
+  // consolation.innerHTML = 'winner: ' + root2.controlSwitch();
+  containerNode.appendChild(consolation);
+  const loser1 = document.createElement('div');
+  const loser2 = document.createElement('div');
+  loser1.classList.add('childDiv');
+  loser1.innerHTML = '' + root2.childInfo();
+  loser2.classList.add('childDiv');
+  loser2.innerHTML = '' + root2.childInfo(false);
+  consolation.appendChild(loser1);
+  consolation.appendChild(loser2);
+}
+
+
+function drawLines() {
+// upper line2 no1
+  let line1 = document.createElement('div');
+  line1.classList.add('upperLine2');
+  line1.style.webkitTransform = 'translate(200px, 49px)';
+  line1.style.transform = line1.style.webkitTransform;
+  containerNode.appendChild(line1);
+
+  // // lower line2 no1
+  line1 = document.createElement('div');
+  line1.classList.add('lowerLine2');
+  line1.style.webkitTransform = 'translate(200px, 200px)';
+  line1.style.transform = line1.style.webkitTransform;
+  containerNode.appendChild(line1);
+
+  // // uppper line2 no2
+  line1 = document.createElement('div');
+  line1.classList.add('upperLine2');
+  line1.style.webkitTransform = 'translate(200px, 449px)';
+  line1.style.transform = line1.style.webkitTransform;
+  containerNode.appendChild(line1);
+
+  // lower line2 no2
+  line1 = document.createElement('div');
+  line1.classList.add('lowerLine2');
+  line1.style.webkitTransform = 'translate(200px, 600px)';
+  line1.style.transform = line1.style.webkitTransform;
+  containerNode.appendChild(line1);
+
+
+  // upper line1 no1
+  line1 = document.createElement('div');
+  line1.classList.add('upperLine1');
+  line1.style.webkitTransform = 'translate(600px, 149px)';
+  line1.style.transform = line1.style.webkitTransform;
+  containerNode.appendChild(line1);
+
+  // lower line1 no1
+  line1 = document.createElement('div');
+  line1.classList.add('lowerLine1');
+  line1.style.webkitTransform = 'translate(600px, 400px)';
+  line1.style.transform = line1.style.webkitTransform;
+  containerNode.appendChild(line1);
+
+  // straight line
+  line1 = document.createElement('div');
+  line1.classList.add('straightLine');
+  line1.style.webkitTransform = 'translate(1000px, 349px)';
+  line1.style.transform = line1.style.webkitTransform;
+  containerNode.appendChild(line1);
+}
+function init() {
+  drawBracket();
+  drawLines();
+}
+init();
+function clearChildNodes(element) {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
   }
 }
-const root2 = new tree.BinaryNode('consolation');
-root2.replaceSpecialChild(semiA);
-root2.replaceSpecialChild(semiB, false);
-const consolation = document.createElement('div');
-consolation.classList.add('nodeDiv');
-consolation.style.webkitTransform = 'translate(1100px, 125px)';
-consolation.style.transform = consolation.style.webkitTransform;
-// consolation.innerHTML = 'winner: ' + root2.controlSwitch();
-containerNode.appendChild(consolation);
-const loser1 = document.createElement('div');
-const loser2 = document.createElement('div');
-loser1.classList.add('childDiv');
-loser1.innerHTML = '' + root2.childInfo();
-loser2.classList.add('childDiv');
-loser2.innerHTML = '' + root2.childInfo(false);
-consolation.appendChild(loser1);
-consolation.appendChild(loser2);
 
+window.addEventListener('keypress', (event) => {
+  if (event.code === 'Digit1') {
+    clearChildNodes(containerNode);
+    rootNode.refineSubtree();
+    init();
+  }
+  // if (event.code === 'Digit2') {
 
-const winner = document.createElement('div');
-winner.classList.add('winner');
-winner.style.webkitTransform = 'translate(1100px, 325px)';
-winner.style.transform = winner.style.webkitTransform;
-winner.innerHTML = 'winner: ' + rootNode.controlSwitch();
-containerNode.appendChild(winner);
-
-// upper line2 no1
-let line1 = document.createElement('div');
-line1.classList.add('upperLine2');
-line1.style.webkitTransform = 'translate(200px, 49px)';
-line1.style.transform = line1.style.webkitTransform;
-containerNode.appendChild(line1);
-
-// // lower line2 no1
-// line1 = document.createElement('div');
-// line1.classList.add('lowerLine2');
-// line1.style.webkitTransform = 'translate(200px, 200px)';
-// line1.style.transform = line1.style.webkitTransform;
-// containerNode.appendChild(line1);
-
-// // uppper line2 no2
-// line1 = document.createElement('div');
-// line1.classList.add('upperLine2');
-// line1.style.webkitTransform = 'translate(200px, 449px)';
-// line1.style.transform = line1.style.webkitTransform;
-// containerNode.appendChild(line1);
-
-// lower line2 no2
-line1 = document.createElement('div');
-line1.classList.add('lowerLine2');
-line1.style.webkitTransform = 'translate(200px, 600px)';
-line1.style.transform = line1.style.webkitTransform;
-containerNode.appendChild(line1);
-
-
-// upper line1 no1
-line1 = document.createElement('div');
-line1.classList.add('upperLine1');
-line1.style.webkitTransform = 'translate(600px, 149px)';
-line1.style.transform = line1.style.webkitTransform;
-containerNode.appendChild(line1);
-
-// lower line1 no1
-line1 = document.createElement('div');
-line1.classList.add('lowerLine1');
-line1.style.webkitTransform = 'translate(600px, 400px)';
-line1.style.transform = line1.style.webkitTransform;
-containerNode.appendChild(line1);
-
-// straight line
-line1 = document.createElement('div');
-line1.classList.add('straightLine');
-line1.style.webkitTransform = 'translate(1000px, 349px)';
-line1.style.transform = line1.style.webkitTransform;
-containerNode.appendChild(line1);
+  // }
+});
 
 /* eslint-disable */
 // target elements with the "draggable" class

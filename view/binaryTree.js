@@ -183,14 +183,18 @@ class BinaryNode {
   }
 
   iterateSubTree(fn) {
+    let resultLeft = false;
+    let resultRight = false;
+    let resultThis = false;
     if ((this.leftChild instanceof BinaryNode) && !this.specialLeftChild) {
-      this.leftChild.iterateSubTree(fn);
+      resultLeft = this.leftChild.iterateSubTree(fn);
     }
     // console.log(this.BasicInfo, '\n Ascendant:' + this.controlSwitch());
-    fn(this);
     if ((this.rightChild instanceof BinaryNode) && !this.specialRightChild) {
-      this.rightChild.iterateSubTree(fn);
+      resultRight = this.rightChild.iterateSubTree(fn);
     }
+    resultThis = fn(this);
+    return resultLeft || resultRight || resultThis;
   }
 
   binaryTreeToArray(arr = [], nodeIndex = 1) {
@@ -269,6 +273,40 @@ class BinaryNode {
       return nonExported.childInfo(this.specialRightChild, this.rightChild);
     }
   }
+
+
+  refineSubtree() {
+    if ((this.leftChild instanceof BinaryNode) && !this.specialLeftChild) {
+      this.leftChild.refineSubtree();
+    }
+    if ((this.rightChild instanceof BinaryNode) && !this.specialRightChild) {
+      this.rightChild.refineSubtree();
+    }
+    const resultLeft = nonExported.refineChildNode(this.leftChild, this.specialLeftChild);
+    if (resultLeft) {
+      if (resultLeft === true) {
+        this.leftChild = null;
+        this.specialLeftChild = false;
+      } else {
+        // const name = this.leftChild.name;
+        this.leftChild = resultLeft.replacement;
+        // this.leftChild.name = name;
+        this.specialLeftChild = resultLeft.isSpecial;
+      }
+    }
+    const resultRight = nonExported.refineChildNode(this.rightChild, this.specialRightChild);
+    if (resultRight) {
+      if (resultRight === true) {
+        this.rightChild = null;
+        this.specialRightChild = false;
+      } else {
+        // const name = this.rightChild.name;
+        this.rightChild = resultRight.replacement;
+        // this.rightChild.name = name;
+        this.specialRightChild = resultRight.isSpecial;
+      }
+    }
+  }
 }
 
 let nonExported = {
@@ -310,6 +348,32 @@ let nonExported = {
       return nodeRef.name;
     }
     return null;
+  },
+
+  refineChildNode: (nodeRef, special = false) => {
+    if (nodeRef instanceof BinaryNode) {
+      if (nodeRef.leftChild === null && nodeRef.rightChild === null) {
+        return true;
+      } else if (nodeRef.leftChild === null || nodeRef.rightChild === null) {
+        // return nodeRef.leftChild === null ? nodeRef.rightChild : nodeRef.leftChild;
+        if (special) {
+          return true;
+        } else {
+          let replacement;
+          let isSpecial;
+          if (nodeRef.leftChild === null) {
+            replacement = nodeRef.rightChild;
+            isSpecial = nodeRef.specialRightChild;
+          } else {
+            replacement = nodeRef.leftChild;
+            isSpecial = nodeRef.specialRightChild;
+          }
+          return { isSpecial, replacement };
+        }
+      }
+    } else {
+      return false;
+    }
   },
 };
 
